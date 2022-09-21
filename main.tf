@@ -105,6 +105,8 @@ resource "azurerm_linux_virtual_machine" "mtc-vm" {
     azurerm_network_interface.mtc-nic.id
   ]
 
+  custom_data = filebase64("customdata.tpl")
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -120,5 +122,19 @@ resource "azurerm_linux_virtual_machine" "mtc-vm" {
     admin_ssh_key {
     username   = "adminuser"
     public_key = file("~/.ssh/id_azure_rsa.pub")
+  }
+
+  provisioner "local-exec" {
+    command = templatefile("windows-ssh-script.tpl" , {
+      hostname = self.public_ip_address,
+      user = "adminuser",
+      identityfile = "~/.ssh/id_azure_rsa"
+    })
+    interpreter = ["powershell", "-Command"]
+
+  }
+
+  tags = {
+    environment = "dev"
   }
 }
