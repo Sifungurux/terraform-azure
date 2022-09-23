@@ -11,11 +11,20 @@ provider "azurerm" {
 }
 
 
+data "azurerm_public_ip" "mtc-ip-data" {
+  name = azurerm_public_ip.mtc-ip.name
+  resource_group_name = azurerm_resource_group.mtc-rg.name
+}
+
+###############################################################################
+#                                                                             #
+###############################################################################
 resource "azurerm_resource_group" "mtc-rg" {
   name     = "mtc-resources"
   location = "West Europe"
   tags = {
-    environment = "dev"
+    Environment = "dev",
+    Created = local.current_time
   }
 }
 
@@ -100,7 +109,7 @@ resource "azurerm_linux_virtual_machine" "mtc-vm" {
   resource_group_name = azurerm_resource_group.mtc-rg.name
   location            = azurerm_resource_group.mtc-rg.location
   size                = "Standard_B1s"
-  admin_username      = "adminuser"
+  admin_username      = "${var.username}"
   network_interface_ids = [
     azurerm_network_interface.mtc-nic.id
   ]
@@ -120,17 +129,17 @@ resource "azurerm_linux_virtual_machine" "mtc-vm" {
   }
 
     admin_ssh_key {
-    username   = "adminuser"
+    username   = "${var.username}"
     public_key = file("~/.ssh/id_azure_rsa.pub")
   }
 
   provisioner "local-exec" {
-    command = templatefile("windows-ssh-script.tpl" , {
+    command = templatefile("${var.host_os}-ssh-script.tpl" , {
       hostname = self.public_ip_address,
       user = "adminuser",
-      identityfile = "~/.ssh/id_azure_rsa"
+      identityfile = "${var.keyfile}"
     })
-    interpreter = ["powershell", "-Command"]
+    interpreter = var.host_os == "windows" ? ["powershell", "-Command"] : ["bash", "-c"]
 
   }
 
@@ -138,3 +147,4 @@ resource "azurerm_linux_virtual_machine" "mtc-vm" {
     environment = "dev"
   }
 }
+
