@@ -1,2 +1,5 @@
 .terraform*
 *state*
+
+src/*/.terraform*
+src/*/*state*
