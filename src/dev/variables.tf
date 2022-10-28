@@ -17,25 +17,6 @@ variable "env" {
   type = string
 }
 
-#variable "admin_username" {
-#  description = "Administrator username"
-#  type        = string
-#  sensitive   = true
-#
-# validation {
-#    condition     = var.admin_username != "admin"
-#    error_message = "Admin username may not be admin. Change it to a more unique username"
-#  }
-#}
-
-#variable "admin_password" {
-#  description = "Administrator password"
-#  type        = string
-#  sensitive   = true
-#}
-
-
-
 variable "resource_tags" {
   description = "Tags to set for all resources"
   type        = map(string)

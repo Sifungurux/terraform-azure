@@ -5,7 +5,14 @@ terraform {
       version = "=2.91.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "terrastate-rg"
+    storage_account_name = "kirk0terrastate"
+    container_name       = "dev"
+    key                  = "terraform.tfstate"
+  }
 }
+
 provider "azurerm" {
   features {}
 }
@@ -22,8 +29,6 @@ module "keyvault" {
   source = "../../module/keyvault"
   env    = var.env
 
-
-
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tenant_id           = data.azuread_client_config.current.tenant_id
@@ -34,7 +39,7 @@ module "keyvault" {
 }
 
 module "main-virtual-machine" {
-  source = "../../module/vm"
+  source = "../../module/virtual_machine"
   env    = var.env
 
   resource_group_name = azurerm_resource_group.rg.name

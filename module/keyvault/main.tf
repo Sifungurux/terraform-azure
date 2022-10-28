@@ -1,7 +1,3 @@
-
-
-
-
 resource "azurerm_key_vault" "key-vault" {
   name     = local.name
   location = var.location
