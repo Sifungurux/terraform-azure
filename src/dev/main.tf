@@ -48,7 +48,11 @@ module "main-virtual-machine" {
   virtual_network_name = "main"
   subnet_name          = "vm-subnet"
 
+
+
   vm = local.vm
 
   tags = local.tags
+
+
 }

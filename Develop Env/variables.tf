@@ -10,3 +10,7 @@ variable "keyfile" {
   type = string
   default = "~/.ssh/id_rsa"
 }
+variable "source_address_prefix" {
+  type = string
+  default = null 
+}

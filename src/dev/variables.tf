@@ -43,9 +43,9 @@ locals {
       create_option                   = "FromImage"
       managed_disk_type               = "Standard_LRS"
       hostname                        = "tftest"
-      admin_username                  = "kirk"
+      admin_username                  = "kirk"          
       admin_password                  = "JKDF2fef3!!3"
-      disable_password_authentication = false
+      disable_password_authentication = false           #only for testing has to be changed 
     },
     tftest2 : {
       vm_size                         = "Standard_B1ls"
@@ -60,7 +60,7 @@ locals {
       hostname                        = "tftest"
       admin_username                  = "kirk"
       admin_password                  = "JKDF2fef3!!3"
-      disable_password_authentication = false
+      disable_password_authentication = false           #only for testing has to be changed 
     }
   }
 }

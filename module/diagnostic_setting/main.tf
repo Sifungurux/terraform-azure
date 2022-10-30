@@ -1,19 +1,11 @@
 
+resource "azurerm_monitor_diagnostic_setting" "resource" {
+  name               = "Cental log for ${var.env} evenvironemnt "
+  target_resource_id = var.target_resource_id
 
-data "azurerm_storage_account" "example" {
-  name                = "examplestoracc"
-  resource_group_name = azurerm_resource_group.example.name
-}
-
-data "azurerm_key_vault" "example" {
-  name                = "example-vault"
-  resource_group_name = azurerm_resource_group.example.name
-}
-
-resource "azurerm_monitor_diagnostic_setting" "example" {
-  name               = "example"
-  target_resource_id = data.azurerm_key_vault.example.id
-  storage_account_id = data.azurerm_storage_account.example.id
+  eventhub_authorization_rule_id = var.eventhub ? var.eventhub : null
+  log_analytics_workspace_id = var.log_analytics ? var.log_analytics : null
+  storage_account_id = var.storage_account ? var.storage_account : null
 
   log {
     category = "AuditEvent"
@@ -23,7 +15,6 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
       enabled = false
     }
   }
-
   metric {
     category = "AllMetrics"
 

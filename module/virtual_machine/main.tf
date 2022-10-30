@@ -1,10 +1,3 @@
-resource "random_string" "rnd" {
-  length      = 4
-  min_numeric = 4
-  special     = false
-  lower       = true
-}
-
 resource "azurerm_virtual_network" "main" {
   name = "vn-${var.virtual_network_name}-${var.env}"
   resource_group_name = var.resource_group_name
@@ -48,7 +41,7 @@ resource "azurerm_virtual_machine" "main" {
     version     = each.value.os_version
   }
   storage_os_disk {
-    name   = "${each.value.disc_name}-${random_string.rnd.result}"
+    name   = "${each.key}-${each.value.disc_name}"
     caching   = each.value.caching
     create_option   = each.value.create_option
     managed_disk_type   = each.value.managed_disk_type
@@ -69,3 +62,11 @@ resource "azurerm_virtual_machine" "main" {
     azurerm_network_interface.main
   ]
 }
+
+
+/* module "diagnostic_setting" {
+  source = "../diagnostic_setting" 
+  for_each = var.vm
+  target_resource_id = data.azurerm_virtual_machine.name[each[key]]
+  env = var.env  
+} */

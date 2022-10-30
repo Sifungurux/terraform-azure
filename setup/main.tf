@@ -30,6 +30,7 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 	allow_blob_public_access = true
+  min_tls_version          = "TLS1_2"
 
 	tags = local.tags
 }
